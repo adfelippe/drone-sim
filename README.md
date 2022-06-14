@@ -1,7 +1,9 @@
 # drone-sim
 ## Drone Position Simulator
 
-This is a simple Drone Position Simulator which relies on the C++ [GeographicLib](https://geographiclib.sourceforge.io/C++/doc/index.html) to calculate positions based on a starting location and destination.
+This is a simple Drone Position Simulator which relies on the C++ [GeographicLib](https://geographiclib.sourceforge.io/C++/doc/index.html) to calculate positions based on an origin location, destination location, speed and time.
+
+The position is estimated using the geodesic points algorithms from the [GeographicLib](https://geographiclib.sourceforge.io/C++/doc/index.html) simply by calculating the distance from origin to destination for a given point in time after the simulation started. 
 
 ### Dependencies:
 
