@@ -1,15 +1,16 @@
 #include <gtest/gtest.h>
 #include <thread>
 #include <chrono>
+#include <sstream>
 #include "DroneSimulation.hpp"
 
 void printInfoMessage(const std::string& message);
 
 TEST(TestDroneSim, GivenSimulationIsCreatedWithValidParameters_WhenStartingSimulation_ThenItReturnsTrue) {
-    DroneSimulation::Geolocation starting_location;
-    starting_location.lat = 24.555;
-    starting_location.lon = 54.555;
-    starting_location.alt = 200.0;
+    DroneSimulation::Geolocation origin_location;
+    origin_location.lat = 24.555;
+    origin_location.lon = 54.555;
+    origin_location.alt = 200.0;
 
     DroneSimulation::Geolocation destination_location;
     destination_location.lat = 34.555;
@@ -18,7 +19,7 @@ TEST(TestDroneSim, GivenSimulationIsCreatedWithValidParameters_WhenStartingSimul
 
     double speed_m_s = 20;
 
-    DroneSimulation simulation(starting_location, destination_location, speed_m_s);
+    DroneSimulation simulation(origin_location, destination_location, speed_m_s);
 
     EXPECT_TRUE(simulation.start());
 }
@@ -29,10 +30,10 @@ TEST(TestDroneSim, GivenSimulationIsCreatedWithoutParameters_WhenStartingSimulat
 }
 
 TEST(TestDroneSim, GivenSimulationHasStarted_WhenCheckingIfStarted_ThenItReturnsSuccess) {
-    DroneSimulation::Geolocation starting_location;
-    starting_location.lat = 24.555;
-    starting_location.lon = 54.555;
-    starting_location.alt = 200.0;
+    DroneSimulation::Geolocation origin_location;
+    origin_location.lat = 24.555;
+    origin_location.lon = 54.555;
+    origin_location.alt = 200.0;
 
     DroneSimulation::Geolocation destination_location;
     destination_location.lat = 34.555;
@@ -41,17 +42,17 @@ TEST(TestDroneSim, GivenSimulationHasStarted_WhenCheckingIfStarted_ThenItReturns
 
     double speed_m_s = 20;
 
-    DroneSimulation simulation(starting_location, destination_location, speed_m_s);
+    DroneSimulation simulation(origin_location, destination_location, speed_m_s);
 
     EXPECT_TRUE(simulation.start());
     EXPECT_TRUE(simulation.isStarted());
 }
 
 TEST(TestDroneSim, GivenAKnownStartingAndDestinationLocation_WhenGettingDistanceInMeters_ThenValueIsAsExpected) {
-    DroneSimulation::Geolocation starting_location;
-    starting_location.lat = 24.4427496;
-    starting_location.lon = 54.5754511;
-    starting_location.alt = 200.0;
+    DroneSimulation::Geolocation origin_location;
+    origin_location.lat = 24.4427496;
+    origin_location.lon = 54.5754511;
+    origin_location.alt = 200.0;
     DroneSimulation::Geolocation destination_location;
     destination_location.lat = 25.2556164;
     destination_location.lon = 55.3650570;
@@ -59,14 +60,14 @@ TEST(TestDroneSim, GivenAKnownStartingAndDestinationLocation_WhenGettingDistance
     double speed_m_s = 20;
     double expected_distance_m = 120318.817;
 
-    DroneSimulation simulation(starting_location, destination_location, speed_m_s);
+    DroneSimulation simulation(origin_location, destination_location, speed_m_s);
     simulation.start();
     EXPECT_NEAR(expected_distance_m, simulation.getTotalDistanceMeters(), 0.1);
 
     // New locations
-    starting_location.lat = 40.6;
-    starting_location.lon = -73.8;
-    starting_location.alt = 200.0;
+    origin_location.lat = 40.6;
+    origin_location.lon = -73.8;
+    origin_location.alt = 200.0;
 
     destination_location.lat = 51.6;
     destination_location.lon = 0.5;
@@ -75,14 +76,14 @@ TEST(TestDroneSim, GivenAKnownStartingAndDestinationLocation_WhenGettingDistance
     expected_distance_m = 5617606.442;
 
     simulation.stop();
-    simulation.setDroneSimulationData(starting_location, destination_location, speed_m_s);
+    simulation.setDroneSimulationData(origin_location, destination_location, speed_m_s);
     simulation.start();
     EXPECT_NEAR(expected_distance_m, simulation.getTotalDistanceMeters(), 0.1);
 
     // New locations
-    starting_location.lat = 25.656745;
-    starting_location.lon = -93.8658742;
-    starting_location.alt = 200.0;
+    origin_location.lat = 25.656745;
+    origin_location.lon = -93.8658742;
+    origin_location.alt = 200.0;
 
     destination_location.lat = -1.6231587;
     destination_location.lon = -25.6685478;
@@ -91,16 +92,16 @@ TEST(TestDroneSim, GivenAKnownStartingAndDestinationLocation_WhenGettingDistance
     expected_distance_m = 7919320.732;
 
     simulation.stop();
-    simulation.setDroneSimulationData(starting_location, destination_location, speed_m_s);
+    simulation.setDroneSimulationData(origin_location, destination_location, speed_m_s);
     simulation.start();
     EXPECT_NEAR(expected_distance_m, simulation.getTotalDistanceMeters(), 0.1);
 }
 
 TEST(TestDroneSim, TestDroneSimulationMovement) {
-    DroneSimulation::Geolocation starting_location;
-    starting_location.lat = 24.4427496;
-    starting_location.lon = 54.5754511;
-    starting_location.alt = 200.0;
+    DroneSimulation::Geolocation origin_location;
+    origin_location.lat = 24.4427496;
+    origin_location.lon = 54.5754511;
+    origin_location.alt = 200.0;
 
     DroneSimulation::Geolocation destination_location;
     destination_location.lat = 25.2556164;
@@ -110,16 +111,19 @@ TEST(TestDroneSim, TestDroneSimulationMovement) {
     double speed_m_s = 12031.8;
 
     printInfoMessage("Starting drone simulation:");
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-    DroneSimulation simulation(starting_location, destination_location, speed_m_s);
+    DroneSimulation simulation(origin_location, destination_location, speed_m_s);
     simulation.start();
     uint32_t i;
     DroneSimulation::Geolocation current_location;
 
     for (i = 0; i < 10; ++i) {
+        std::ostringstream o_lat, o_lon;
+        o_lat.precision(10);
+        o_lon.precision(10);
         simulation.getCurrentDroneLocation(current_location);
-        printInfoMessage("Current simulated drone position -> Lat: " + std::to_string(current_location.lat) + ", Lon: " +
-                         std::to_string(current_location.lon));
+        o_lat << current_location.lat;
+        o_lon << current_location.lon;
+        printInfoMessage("Current simulated drone position -> Lat: " + o_lat.str() + ", Lon: " + o_lon.str());
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
@@ -132,7 +136,7 @@ TEST(TestDroneSim, TestDroneSimulationMovement) {
 }
 
 void printInfoMessage(const std::string& message) {
-    std::cout << "[   INFO   ] " << std::setprecision(13) << message << std::endl;
+    std::cout << "[   INFO   ] " << message <<  std::endl;
 }
 
 int main(int argc, char **argv) {

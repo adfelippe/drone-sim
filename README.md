@@ -30,10 +30,10 @@ Just copy .hpp and .cpp files to your project and compile as needed.
 
 ### Example:
 ```cpp
-DroneSimulation::Geolocation starting_location;
-starting_location.lat = 24.4427496;
-starting_location.lon = 54.5754511;
-starting_location.alt = 200.0;
+DroneSimulation::Geolocation origin_location;
+origin_location.lat = 24.4427496;
+origin_location.lon = 54.5754511;
+origin_location.alt = 200.0;
 
 DroneSimulation::Geolocation destination_location;
 destination_location.lat = 25.2556164;
@@ -42,7 +42,7 @@ destination_location.alt = 200.0;
 
 double speed_m_s = 20;
 
-DroneSimulation simulation(starting_location, destination_location, speed_m_s);
+DroneSimulation simulation(origin_location, destination_location, speed_m_s);
 simulation.start();
 
 DroneSimulation::Geolocation current_location;

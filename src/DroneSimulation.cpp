@@ -3,9 +3,9 @@
 #include <GeographicLib/GeodesicLine.hpp>
 #include <GeographicLib/Constants.hpp>
 
-DroneSimulation::DroneSimulation(const Geolocation &starting_location, const Geolocation &destination_location,
+DroneSimulation::DroneSimulation(const Geolocation &origin_location, const Geolocation &destination_location,
                                  const double &speed_m_s)
-    : starting_location_(starting_location),
+    : origin_location_(origin_location),
       destination_location_(destination_location),
       speed_m_s_(speed_m_s),
       is_location_set_(true),
@@ -32,9 +32,9 @@ bool DroneSimulation::stop(void) {
 
 bool DroneSimulation::isStarted(void) { return is_simulation_started_; }
 
-void DroneSimulation::setDroneSimulationData(const Geolocation &starting_location,
+void DroneSimulation::setDroneSimulationData(const Geolocation &origin_location,
                                              const Geolocation &destination_location, const double &speed_m_s) {
-    starting_location_ = starting_location;
+    origin_location_ = origin_location;
     destination_location_ = destination_location;
     speed_m_s_ = speed_m_s;
     is_location_set_ = true;
@@ -52,7 +52,7 @@ double DroneSimulation::getTotalDistanceMeters(void) const {
     const GeographicLib::Geodesic& geodesic = GeographicLib::Geodesic::WGS84();
     double distance_m = 0.0F;
 
-    geodesic.Inverse(starting_location_.lat, starting_location_.lon, destination_location_.lat,
+    geodesic.Inverse(origin_location_.lat, origin_location_.lon, destination_location_.lat,
                      destination_location_.lon, distance_m);
 
     return distance_m;
@@ -60,7 +60,7 @@ double DroneSimulation::getTotalDistanceMeters(void) const {
 
 bool DroneSimulation::getCurrentDroneLocation(Geolocation &current_location) {
     const GeographicLib::Geodesic& geodesic = GeographicLib::Geodesic::WGS84();
-    GeographicLib::GeodesicLine line = geodesic.InverseLine(starting_location_.lat, starting_location_.lon,
+    GeographicLib::GeodesicLine line = geodesic.InverseLine(origin_location_.lat, origin_location_.lon,
                                                             destination_location_.lat, destination_location_.lon);
 
     line.Position(getTraveledDistanceMeters(), current_location.lat, current_location.lon);

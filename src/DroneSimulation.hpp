@@ -12,7 +12,7 @@ public:
         double alt;
     };
 
-    DroneSimulation(const Geolocation &starting_location, const Geolocation &destination_location,
+    DroneSimulation(const Geolocation &origin_location, const Geolocation &destination_location,
                     const double &speed_m_s);
     DroneSimulation(void);
     virtual ~DroneSimulation();
@@ -20,7 +20,7 @@ public:
     bool start(void);
     bool stop(void);
     bool isStarted(void);
-    void setDroneSimulationData(const Geolocation &starting_location, const Geolocation &destination_location,
+    void setDroneSimulationData(const Geolocation &origin_location, const Geolocation &destination_location,
                                 const double &speed_m_s);
     void setSpeed(const double &speed_m_s);
     double getTotalDistanceMeters(void) const;
@@ -30,7 +30,7 @@ public:
 private:
     int64_t getElapsedTimeSeconds(void);
 
-    Geolocation starting_location_;
+    Geolocation origin_location_;
     Geolocation destination_location_;
     double speed_m_s_;
     bool is_location_set_;
