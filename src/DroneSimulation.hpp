@@ -12,18 +12,27 @@ public:
         double alt;
     };
 
-    DroneSimulation(Geolocation starting_location, Geolocation destination_location, double speed_m_s);
+    DroneSimulation(const Geolocation &starting_location, const Geolocation &destination_location,
+                    const double &speed_m_s);
     DroneSimulation(void);
     virtual ~DroneSimulation();
 
     bool start(void);
+    bool stop(void);
     bool isStarted(void);
+    void setDroneSimulationData(const Geolocation &starting_location, const Geolocation &destination_location,
+                                const double &speed_m_s);
+    double getTotalDistanceMeters(void) const;
+    bool getCurrentDroneLocation(Geolocation &current_location);
+    double getTraveledDistanceMeters(void);
 
 private:
+    int64_t getElapsedTimeSeconds(void);
+
     Geolocation starting_location_;
     Geolocation destination_location_;
     double speed_m_s_;
     bool is_location_set_;
     bool is_simulation_started_;
-    std::chrono::time_point<std::chrono::steady_clock> start_time_sec_;
+    std::chrono::time_point<std::chrono::steady_clock> start_time_;
 };

@@ -9,7 +9,9 @@ include_directories(../src)
 # Find libs
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
-find_library(PTHREAD_LIB pthread)
+
+find_library(LIBS_PTHREAD NAMES pthread)
+find_library(LIBS_GEOGRAPHIC NAMES Geographic)
 
 add_executable(run_tests
                ../src/DroneSimulation.cpp
@@ -17,5 +19,6 @@ add_executable(run_tests
 
 target_link_libraries(run_tests 
                       ${GTEST_LIBRARIES}
-                      ${PTHREAD_LIB})
+                      ${LIBS_PTHREAD}
+                      ${LIBS_GEOGRAPHIC})
 
