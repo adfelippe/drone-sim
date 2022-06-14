@@ -118,7 +118,7 @@ TEST(TestDroneSim, TestDroneSimulationMovement) {
 
     for (i = 0; i < 10; ++i) {
         simulation.getCurrentDroneLocation(current_location);
-        printInfoMessage("Current simulated drone position: " + std::to_string(current_location.lat) + ", " +
+        printInfoMessage("Current simulated drone position -> Lat: " + std::to_string(current_location.lat) + ", Lon: " +
                          std::to_string(current_location.lon));
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
