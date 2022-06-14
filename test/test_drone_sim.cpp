@@ -3,6 +3,8 @@
 #include <chrono>
 #include "DroneSimulation.hpp"
 
+void printInfoMessage(const std::string& message);
+
 TEST(TestDroneSim, GivenSimulationIsCreatedWithValidParameters_WhenStartingSimulation_ThenItReturnsTrue) {
     DroneSimulation::Geolocation starting_location;
     starting_location.lat = 24.555;
@@ -107,17 +109,30 @@ TEST(TestDroneSim, TestDroneSimulationMovement) {
 
     double speed_m_s = 12031.8;
 
+    printInfoMessage("Starting drone simulation:");
+    std::this_thread::sleep_for(std::chrono::seconds(2));
     DroneSimulation simulation(starting_location, destination_location, speed_m_s);
     simulation.start();
-
     uint32_t i;
     DroneSimulation::Geolocation current_location;
-    for (i = 0; i < 15; ++i) {
+
+    for (i = 0; i < 10; ++i) {
         simulation.getCurrentDroneLocation(current_location);
-        std::cout << "Current simulated drone position: " << current_location.lat << ", " << current_location.lon
-                  << std::setprecision(13) <<std::endl;
+        printInfoMessage("Current simulated drone position: " + std::to_string(current_location.lat) + ", " +
+                         std::to_string(current_location.lon));
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
+
+    simulation.getCurrentDroneLocation(current_location);
+    printInfoMessage("Checking if drone reached destination on time as expected:");
+    EXPECT_NEAR(destination_location.lat, current_location.lat, 0.001)
+        << "Failed to reach destination on time - Latidude";
+    EXPECT_NEAR(destination_location.lon, current_location.lon, 0.001)
+        << "Failed to reach destination on time - Longitude";
+}
+
+void printInfoMessage(const std::string& message) {
+    std::cout << "[   INFO   ] " << std::setprecision(13) << message << std::endl;
 }
 
 int main(int argc, char **argv) {

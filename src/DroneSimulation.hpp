@@ -22,6 +22,7 @@ public:
     bool isStarted(void);
     void setDroneSimulationData(const Geolocation &starting_location, const Geolocation &destination_location,
                                 const double &speed_m_s);
+    void setSpeed(const double &speed_m_s);
     double getTotalDistanceMeters(void) const;
     bool getCurrentDroneLocation(Geolocation &current_location);
     double getTraveledDistanceMeters(void);

@@ -40,6 +40,10 @@ void DroneSimulation::setDroneSimulationData(const Geolocation &starting_locatio
     is_location_set_ = true;
 }
 
+void DroneSimulation::setSpeed(const double &speed_m_s) {
+    speed_m_s_ = speed_m_s;
+}
+
 double DroneSimulation::getTotalDistanceMeters(void) const {
     if (!is_simulation_started_) {
         return 0.0F;
