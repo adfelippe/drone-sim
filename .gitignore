@@ -36,3 +36,6 @@ build/**
 
 # Test files
 test/build/**
+
+# VS code
+.vscode/**
