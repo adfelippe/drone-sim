@@ -59,11 +59,15 @@ double DroneSimulation::getTotalDistanceMeters(void) const {
 }
 
 bool DroneSimulation::getCurrentDroneLocation(Geolocation &current_location) {
+    if (!is_simulation_started_) {
+        return false;
+    }
+
     const GeographicLib::Geodesic& geodesic = GeographicLib::Geodesic::WGS84();
     GeographicLib::GeodesicLine line = geodesic.InverseLine(origin_location_.lat, origin_location_.lon,
                                                             destination_location_.lat, destination_location_.lon);
-
     line.Position(getTraveledDistanceMeters(), current_location.lat, current_location.lon);
+    
     return true;
 }
 

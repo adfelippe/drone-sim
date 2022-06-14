@@ -97,6 +97,25 @@ TEST(TestDroneSim, GivenAKnownStartingAndDestinationLocation_WhenGettingDistance
     EXPECT_NEAR(expected_distance_m, simulation.getTotalDistanceMeters(), 0.1);
 }
 
+TEST(TestDroneSim, GivenSimulationHasNotStarted_WhenGettingCurrentDroneLocation_ThenItReturnsFalse) {
+    DroneSimulation::Geolocation origin_location;
+    origin_location.lat = 24.4427496;
+    origin_location.lon = 54.5754511;
+    origin_location.alt = 200.0;
+
+    DroneSimulation::Geolocation destination_location;
+    destination_location.lat = 25.2556164;
+    destination_location.lon = 55.3650570;
+    destination_location.alt = 200.0;
+
+    double speed_m_s = 25;
+
+    DroneSimulation simulation(origin_location, destination_location, speed_m_s);
+    DroneSimulation::Geolocation current_location;
+
+    EXPECT_FALSE(simulation.getCurrentDroneLocation(current_location));
+}
+
 TEST(TestDroneSim, TestDroneSimulationMovement) {
     DroneSimulation::Geolocation origin_location;
     origin_location.lat = 24.4427496;
